@@ -1,0 +1,41 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./cluster_manifests/kube-system
+  prune: true
+  patches:
+  - patch: |
+      - op: remove
+        path: /spec/template/spec/containers/0/command/6
+      - op: add
+        path: /spec/template/spec/containers/0/command/-
+        value: "--node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/octoml-infra-enough-ram"
+    target:
+      kind: Deployment
+      name: "cluster-autoscaler"
+  - patch: |
+      - op: add
+        path: /spec/values/clusterName
+        value: "octoml-infra-enough-ram"
+    target:
+      kind: HelmRelease
+      name: "aws-load-balancer-controller"
+  - patch: |
+      - op: add
+        path: /spec/values/domainFilters
+        value: ["vnz9ct03.challenges.octoml.io"]
+      - op: add
+        path: /spec/values/txtOwnerId
+        value: "external-dns-octoml-infra-enough-ram"
+    target:
+      kind: HelmRelease
+      name: "external-dns"

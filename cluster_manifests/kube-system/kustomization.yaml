@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - aws-load-balancer-controller/helm-repo.yaml
+  - aws-load-balancer-controller/helm-release.yaml
+  - cluster-autoscaler/deployment.yaml
+  - cluster-autoscaler/rbac.yaml
+  - external-dns/helm-repo.yaml
+  - external-dns/helm-release.yaml
+  - kube-metrics/api-service.yaml
+  - kube-metrics/deployment.yaml
+  - kube-metrics/rbac.yaml
