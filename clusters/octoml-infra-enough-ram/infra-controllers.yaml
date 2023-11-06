@@ -24,6 +24,13 @@ spec:
       name: "cluster-autoscaler"
   - patch: |
       - op: add
+        path: /metadata/annotations
+        value: {"eks.amazonaws.com/role-arn": "arn:aws:iam::259269279225:role/cluster-autoscaler"}
+    target:
+      kind: ServiceAccount
+      name: "cluster-autoscaler"
+  - patch: |
+      - op: add
         path: /spec/values/clusterName
         value: "octoml-infra-enough-ram"
     target:
@@ -36,6 +43,16 @@ spec:
       - op: add
         path: /spec/values/txtOwnerId
         value: "external-dns-octoml-infra-enough-ram"
+      - op: add
+        path: /spec/values/serviceAccount/annotations
+        value: {"eks.amazonaws.com/role-arn": "arn:aws:iam::259269279225:role/external-dns-controller"}
     target:
       kind: HelmRelease
       name: "external-dns"
+  - patch: |
+      - op: add
+        path: /spec/values/serviceAccount/annotations
+        value: {"eks.amazonaws.com/role-arn": "arn:aws:iam::259269279225:role/alb-controller"}
+    target:
+      kind: HelmRelease
+      name: "aws-load-balancer-controller"
