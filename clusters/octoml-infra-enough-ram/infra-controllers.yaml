@@ -33,6 +33,12 @@ spec:
       - op: add
         path: /spec/values/clusterName
         value: "octoml-infra-enough-ram"
+      - op: add
+        path: /spec/values/serviceAccount/annotations
+        value: {"eks.amazonaws.com/role-arn": "arn:aws:iam::259269279225:role/alb-controller"}
+      - op: add
+        path: /spec/values/vpcId
+        value: vpc-0372ae4de65b2bf09
     target:
       kind: HelmRelease
       name: "aws-load-balancer-controller"
@@ -49,10 +55,4 @@ spec:
     target:
       kind: HelmRelease
       name: "external-dns"
-  - patch: |
-      - op: add
-        path: /spec/values/serviceAccount/annotations
-        value: {"eks.amazonaws.com/role-arn": "arn:aws:iam::259269279225:role/alb-controller"}
-    target:
-      kind: HelmRelease
-      name: "aws-load-balancer-controller"
+
